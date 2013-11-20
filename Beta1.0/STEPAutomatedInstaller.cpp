@@ -102,7 +102,7 @@ void unpackModDirectories(string sourceDir /*string literal of sourceDir*/)
      { 
         buffer[i] = tolower(buffer[i]); 
      } 
-     if (buffer != dataDir && buffer != "textures" && buffer != "meshes" && buffer != "video" && buffer != "strings" && buffer != "scripts" && buffer != "sound" && buffer != "interface") //if the directory is dataDir or one of those in conditional, excluded from robocopy operations
+     if (buffer != dataDir && buffer != "textures" && buffer != "meshes" && buffer != "video" && buffer != "strings" && buffer != "scripts" && buffer != "sound" && buffer != "interface" && buffer!= "skse") //if the directory is dataDir or one of those in conditional, excluded from robocopy operations
      {
       command+= sourceDir + "\\" + buffer + "\" " + sourceDir;
       cout << command << endl;
@@ -122,6 +122,10 @@ void cleanup(string sourceDir /*string literal of sourceDir*/)
      ifstream dirList("dirList.temp"); //creates file pointer to newly created list file
      while(getline(dirList, buffer))  //getline returns zero when file output fails or end-of-file. Cycles through file list iteratively moving sub directories of sourceDir into dataDir
     {
+     for(int i = 0; buffer[i] != '\0'; i++) //converts buffer to all lower case letters for comparisons
+     { 
+        buffer[i] = tolower(buffer[i]); 
+     } 
      if (buffer != dataDir) //excludes dataDir for robocopy operations
      {
       command+= sourceDir + "\\" + buffer + "\" " + sourceDir + "\\" + dataDir + "\\" + buffer + "\"";
@@ -138,6 +142,9 @@ void cleanup(string sourceDir /*string literal of sourceDir*/)
     cout << command << endl;
     system(command.c_str());
     command = "move /y " + sourceDir + "\\" + "*.bsl " + sourceDir + "\\" + dataDir;
+    cout << command << endl;
+    system(command.c_str());
+    command = "move /y " + sourceDir + "\\" + "*.esm " + sourceDir + "\\" + dataDir;
     cout << command << endl;
     system(command.c_str());
     dirList.close();
